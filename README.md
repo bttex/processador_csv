@@ -17,7 +17,6 @@ Um aplicativo web desenvolvido com Streamlit para processar arquivos CSV e XLSX 
 ```
 streamlit
 pandas
-openpyxl
 ```
 
 ## 🔧 Instalação
