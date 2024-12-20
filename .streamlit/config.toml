@@ -1,0 +1,24 @@
+[server]
+# Define o limite de upload para 5 GB
+maxUploadSize = 5000
+
+# Define que o servidor deve escutar em todas as interfaces de rede
+headless = true
+
+# Habilita o suporte ao CORS para permitir conexões externas
+enableCORS = true
+
+# Define um tempo maior para espera de requisições longas
+runOnSave = true
+
+[theme]
+primaryColor="#1e88e5"
+backgroundColor="#1e1e1e"
+secondaryBackgroundColor="#2e2e2e"
+textColor="#ffffff"
+font="monospace"
+
+[runner]
+# Aumenta o limite de tempo para execução de scripts
+magicEnabled = false
+
