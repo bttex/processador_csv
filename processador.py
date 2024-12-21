@@ -151,7 +151,7 @@ if uploaded_file:
 
             # Baixar o arquivo processado em CSV ou XLSX dependendo do tipo original
             if file_type == "csv":
-                csv_resultado = resultado.to_csv(index=False)
+                csv_resultado = resultado.to_csv(index=False, encoding="utf-8-sig")  # Codificação UTF-8 com BOM
                 st.download_button(
                     label="Baixar arquivo processado (CSV)",
                     data=csv_resultado,
