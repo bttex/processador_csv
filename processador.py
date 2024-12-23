@@ -190,17 +190,15 @@ if uploaded_file is not None:
                 st.session_state.file_type = file_type
                 st.session_state.current_file_hash = file_hash
 
+                # Exibir mensagem de sucesso apenas no primeiro carregamento
+                success_message = st.success("Arquivo carregado com sucesso!")
+                time.sleep(3)
+                success_message.empty()
+
     # Se temos dados carregados
     if st.session_state.df is not None:
         df = st.session_state.df
         df_parquet = st.session_state.df_parquet
-        
-        # Exibir informações do arquivo
-        success_message = st.success("Arquivo carregado com sucesso!")
-        
-        # Aguarda alguns segundos e limpa a mensagem
-        time.sleep(3)
-        success_message.empty()
         
         st.info(f"""
             📊 **Informações do arquivo:**
@@ -223,6 +221,28 @@ if uploaded_file is not None:
             default=colunas_disponiveis
         )
 
+        # Filtro por Intervalo de Datas (opcional)
+        coluna_data = st.sidebar.selectbox("Selecione a coluna de data para filtrar (opcional):", options=["Nenhuma"] + colunas_disponiveis)
+        if coluna_data != "Nenhuma":
+            data_inicio = st.sidebar.date_input("Data de início", value=pd.to_datetime(df_parquet[coluna_data]).min())
+            data_fim = st.sidebar.date_input("Data de fim", value=pd.to_datetime(df_parquet[coluna_data]).max())
+
+        # Filtro por Valor Numérico (opcional)
+        coluna_valor = st.sidebar.selectbox("Selecione a coluna numérica para filtrar (opcional):", options=["Nenhuma"] + colunas_disponiveis)
+        if coluna_valor != "Nenhuma":
+            valor_min = st.sidebar.number_input("Valor mínimo", value=float(df_parquet[coluna_valor].min()))
+            valor_max = st.sidebar.number_input("Valor máximo", value=float(df_parquet[coluna_valor].max()))
+
+        # Filtro por Texto (opcional)
+        coluna_texto = st.sidebar.selectbox("Selecione a coluna de texto para filtrar (opcional):", options=["Nenhuma"] + colunas_disponiveis)
+        if coluna_texto != "Nenhuma":
+            texto_filtro = st.sidebar.text_input("Texto para filtrar")
+
+        # Filtro por Categoria (opcional)
+        coluna_categoria = st.sidebar.selectbox("Selecione a coluna de categoria para filtrar (opcional):", options=["Nenhuma"] + colunas_disponiveis)
+        if coluna_categoria != "Nenhuma":
+            categorias_selecionadas = st.sidebar.multiselect("Selecione as categorias:", options=df_parquet[coluna_categoria].unique())
+
         if colunas_selecionadas:
             coluna_agrupamento = st.sidebar.selectbox(
                 "Escolha a coluna para agrupamento:",
@@ -244,22 +264,33 @@ if uploaded_file is not None:
                 st.write("Processando os dados...")
                 progress_bar = st.progress(0)
 
+                # Aplicar filtros
+                df_filtrado = df_parquet.copy()
+                if coluna_data != "Nenhuma":
+                    df_filtrado = df_filtrado[(pd.to_datetime(df_filtrado[coluna_data]) >= data_inicio) & (pd.to_datetime(df_filtrado[coluna_data]) <= data_fim)]
+                if coluna_valor != "Nenhuma":
+                    df_filtrado = df_filtrado[(df_filtrado[coluna_valor] >= valor_min) & (df_filtrado[coluna_valor] <= valor_max)]
+                if coluna_texto != "Nenhuma":
+                    df_filtrado = df_filtrado[df_filtrado[coluna_texto].str.contains(texto_filtro, na=False)]
+                if coluna_categoria != "Nenhuma":
+                    df_filtrado = df_filtrado[df_filtrado[coluna_categoria].isin(categorias_selecionadas)]
+
                 # Simulação de progresso
                 total_etapas = 5
                 for etapa in range(total_etapas):
                     time.sleep(0.5)
                     progress_bar.progress((etapa + 1) / total_etapas)
 
-                # Realizar processamento usando o DataFrame Parquet
+                # Realizar processamento usando o DataFrame filtrado
                 if operacao == "Soma":
                     resultado = (
-                        df_parquet[colunas_selecionadas].groupby(coluna_agrupamento)[coluna_operacao]
+                        df_filtrado[colunas_selecionadas].groupby(coluna_agrupamento)[coluna_operacao]
                         .sum(numeric_only=True)
                         .reset_index()
                     )
                 else:  # Contagem
                     resultado = (
-                        df_parquet[colunas_selecionadas].groupby(coluna_agrupamento)[coluna_operacao]
+                        df_filtrado[colunas_selecionadas].groupby(coluna_agrupamento)[coluna_operacao]
                         .nunique()
                         .reset_index(name="Contagem")
                     )
