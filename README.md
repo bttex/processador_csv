@@ -7,6 +7,11 @@ Um aplicativo web desenvolvido com Streamlit para processar arquivos CSV e XLSX 
 - Upload de arquivos CSV e XLSX
 - Visualização prévia dos dados
 - Seleção flexível de colunas
+- Filtros avançados (opcionais):
+  - Filtro por intervalo de datas
+  - Filtro por valor numérico
+  - Filtro por texto
+  - Filtro por categoria
 - Operações de agrupamento com soma ou contagem
 - Exportação dos resultados em CSV ou XLSX
 - Interface amigável com barra de progresso
@@ -17,6 +22,9 @@ Um aplicativo web desenvolvido com Streamlit para processar arquivos CSV e XLSX 
 ```
 streamlit
 pandas
+pyarrow
+openpyxl
+charset_normalizer
 ```
 
 ## 🔧 Instalação
@@ -31,18 +39,13 @@ pip install -r requirements.txt
 
 1. Execute o aplicativo:
 ```bash
-streamlit run app.py
+streamlit run processador.py
 ```
 
-2. Acesse o aplicativo no navegador (normalmente http://localhost:8501)
-
-3. Siga os passos na interface:
-   - Faça upload do arquivo CSV ou XLSX
-   - Selecione as colunas desejadas no painel lateral
-   - Escolha a coluna para agrupamento
-   - Selecione a operação (Soma ou Contagem)
-   - Clique em "Processar"
-   - Baixe o resultado processado
+2. Faça o upload de um arquivo CSV ou XLSX
+3. Configure os filtros e selecione as colunas desejadas
+4. Clique em "Processar" para aplicar os filtros e operações
+5. Baixe o arquivo processado em CSV ou XLSX
 
 ## 🎯 Características Principais
 
