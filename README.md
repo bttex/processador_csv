@@ -83,13 +83,13 @@ streamlit run processador.py
 ## 🖼️ Prints do Aplicativo
 
 ### Tela Inicial
-(imagens/inicio.png)
+![Tela Inicial](imagens/inicio.png)
 
 ### Configuração de Filtros
-(imagens/filtros.png)
+![Configuração de Filtros](imagens/filtros.png)
 
 ### Resultado do Processamento
-(imagens/export.png)
+![Processamento Final](imagens/export.png)
 
 ## 📝 Notas de Uso
 
