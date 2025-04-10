@@ -243,21 +243,29 @@ if uploaded_file is not None:
         if coluna_categoria != "Nenhuma":
             categorias_selecionadas = st.sidebar.multiselect("Selecione as categorias:", options=df_parquet[coluna_categoria].unique())
 
+        # Adicionar opção para tornar o agrupamento opcional
+        realizar_agrupamento = st.sidebar.checkbox("Realizar agrupamento?", value=True)
+
         if colunas_selecionadas:
-            coluna_agrupamento = st.sidebar.selectbox(
-                "Escolha a coluna para agrupamento:",
-                options=colunas_selecionadas
-            )
+            coluna_agrupamento = None
+            coluna_operacao = None
+            operacao = None
 
-            coluna_operacao = st.sidebar.selectbox(
-                "Escolha a coluna para aplicar a operação:",
-                options=[col for col in colunas_selecionadas if col != coluna_agrupamento]
-            )
+            if realizar_agrupamento:
+                coluna_agrupamento = st.sidebar.selectbox(
+                    "Escolha a coluna para agrupamento:",
+                    options=colunas_selecionadas
+                )
 
-            operacao = st.sidebar.radio(
-                "Escolha a operação a ser realizada:",
-                options=["Soma", "Contagem"]
-            )
+                coluna_operacao = st.sidebar.selectbox(
+                    "Escolha a coluna para aplicar a operação:",
+                    options=[col for col in colunas_selecionadas if col != coluna_agrupamento]
+                )
+
+                operacao = st.sidebar.radio(
+                    "Escolha a operação a ser realizada:",
+                    options=["Soma", "Contagem"]
+                )
 
             # Processar dados
             if st.sidebar.button("Processar"):
@@ -267,7 +275,13 @@ if uploaded_file is not None:
                 # Aplicar filtros
                 df_filtrado = df_parquet.copy()
                 if coluna_data != "Nenhuma":
-                    df_filtrado = df_filtrado[(pd.to_datetime(df_filtrado[coluna_data]) >= data_inicio) & (pd.to_datetime(df_filtrado[coluna_data]) <= data_fim)]
+                    # Converter data_inicio e data_fim para datetime
+                    data_inicio = pd.to_datetime(data_inicio)
+                    data_fim = pd.to_datetime(data_fim)
+                    df_filtrado = df_filtrado[
+                        (pd.to_datetime(df_filtrado[coluna_data]) >= data_inicio) &
+                        (pd.to_datetime(df_filtrado[coluna_data]) <= data_fim)
+                    ]
                 if coluna_valor != "Nenhuma":
                     df_filtrado = df_filtrado[(df_filtrado[coluna_valor] >= valor_min) & (df_filtrado[coluna_valor] <= valor_max)]
                 if coluna_texto != "Nenhuma":
@@ -281,19 +295,23 @@ if uploaded_file is not None:
                     time.sleep(0.5)
                     progress_bar.progress((etapa + 1) / total_etapas)
 
-                # Realizar processamento usando o DataFrame filtrado
-                if operacao == "Soma":
-                    resultado = (
-                        df_filtrado[colunas_selecionadas].groupby(coluna_agrupamento)[coluna_operacao]
-                        .sum(numeric_only=True)
-                        .reset_index()
-                    )
-                else:  # Contagem
-                    resultado = (
-                        df_filtrado[colunas_selecionadas].groupby(coluna_agrupamento)[coluna_operacao]
-                        .nunique()
-                        .reset_index(name="Contagem")
-                    )
+                # Realizar processamento
+                if realizar_agrupamento and coluna_agrupamento and coluna_operacao:
+                    if operacao == "Soma":
+                        resultado = (
+                            df_filtrado[colunas_selecionadas].groupby(coluna_agrupamento)[coluna_operacao]
+                            .sum(numeric_only=True)
+                            .reset_index()
+                        )
+                    else:  # Contagem
+                        resultado = (
+                            df_filtrado[colunas_selecionadas].groupby(coluna_agrupamento)[coluna_operacao]
+                            .nunique()
+                            .reset_index(name="Contagem")
+                        )
+                else:
+                    # Apenas manter as colunas selecionadas
+                    resultado = df_filtrado[colunas_selecionadas]
 
                 st.session_state.processed_result = resultado
                 st.success("Processamento concluído!")

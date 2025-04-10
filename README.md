@@ -1,6 +1,6 @@
 # Processador de Arquivos
 
-Um aplicativo web desenvolvido com Streamlit para processar arquivos CSV e XLSX de forma eficiente, permitindo agrupamento e operações de soma e contagem em grandes conjuntos de dados.
+Um aplicativo web desenvolvido com Streamlit para processar arquivos CSV e XLSX de forma eficiente, permitindo agrupamento opcional e operações de soma e contagem em grandes conjuntos de dados.
 
 ## 🚀 Funcionalidades
 
@@ -12,7 +12,7 @@ Um aplicativo web desenvolvido com Streamlit para processar arquivos CSV e XLSX 
   - Filtro por valor numérico
   - Filtro por texto
   - Filtro por categoria
-- Operações de agrupamento com soma ou contagem
+- **Agrupamento opcional** com soma ou contagem
 - Exportação dos resultados em CSV ou XLSX
 - Interface amigável com barra de progresso
 - Suporte a arquivos grandes (até 5GB)
@@ -44,8 +44,9 @@ streamlit run processador.py
 
 2. Faça o upload de um arquivo CSV ou XLSX
 3. Configure os filtros e selecione as colunas desejadas
-4. Clique em "Processar" para aplicar os filtros e operações
-5. Baixe o arquivo processado em CSV ou XLSX
+4. Escolha se deseja realizar agrupamento ou apenas manter as colunas selecionadas
+5. Clique em "Processar" para aplicar os filtros e operações
+6. Baixe o arquivo processado em CSV ou XLSX
 
 ## 🎯 Características Principais
 
@@ -62,6 +63,7 @@ streamlit run processador.py
 ### Operações Disponíveis
 - **Soma**: Agrupa e soma valores numéricos
 - **Contagem**: Conta valores únicos em cada grupo
+- **Sem agrupamento**: Apenas mantém as colunas selecionadas
 
 ## ⚠️ Limitações
 
@@ -75,8 +77,19 @@ streamlit run processador.py
 - `st.file_uploader`: Gerencia upload de arquivos
 - `pd.read_csv/read_excel`: Lê os arquivos
 - `st.cache_data`: Otimiza carregamento de dados
-- `groupby`: Realiza operações de agrupamento
+- `groupby`: Realiza operações de agrupamento (opcional)
 - `BytesIO`: Gerencia exportação de arquivos
+
+## 🖼️ Prints do Aplicativo
+
+### Tela Inicial
+(imagens/inicio.png)
+
+### Configuração de Filtros
+(imagens/filtros.png)
+
+### Resultado do Processamento
+(imagens/export.png)
 
 ## 📝 Notas de Uso
 

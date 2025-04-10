@@ -21,4 +21,3 @@ font="monospace"
 [runner]
 # Aumenta o limite de tempo para execução de scripts
 magicEnabled = false
-
