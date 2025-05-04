@@ -4,18 +4,21 @@ Um aplicativo web desenvolvido com Streamlit para processar arquivos CSV e XLSX 
 
 ## 🚀 Funcionalidades
 
-- Upload de arquivos CSV e XLSX
+- Upload de arquivos CSV, XLSX e suporte a conversão para Parquet
 - Visualização prévia dos dados
 - Seleção flexível de colunas
-- Filtros avançados (opcionais):
+- **Filtros avançados**:
   - Filtro por intervalo de datas
   - Filtro por valor numérico
   - Filtro por texto
-  - Filtro por categoria
-- **Agrupamento opcional** com soma ou contagem
-- Exportação dos resultados em CSV ou XLSX
+  - Filtro por categorias
+- **Agrupamento opcional**:
+  - Soma de valores numéricos
+  - Contagem de valores únicos
+- Exportação dos resultados em CSV, XLSX ou Parquet
 - Interface amigável com barra de progresso
 - Suporte a arquivos grandes (até 5GB)
+- Limpeza automática de dados da memória ao descartar arquivos
 
 ## 📋 Pré-requisitos
 
@@ -75,10 +78,12 @@ streamlit run processador.py
 
 ### Componentes Principais
 - `st.file_uploader`: Gerencia upload de arquivos
-- `pd.read_csv/read_excel`: Lê os arquivos
-- `st.cache_data`: Otimiza carregamento de dados
+- `pl.read_csv/read_excel`: Lê os arquivos CSV e XLSX
+- `pl.DataFrame`: Manipula os dados de forma eficiente
+- `st.cache_data`: Otimiza carregamento e processamento de dados
 - `groupby`: Realiza operações de agrupamento (opcional)
 - `BytesIO`: Gerencia exportação de arquivos
+- `pyarrow`: Converte dados para o formato Parquet
 
 ## 🖼️ Prints do Aplicativo
 
@@ -104,6 +109,19 @@ streamlit run processador.py
 3. **Formatos de Dados**
    - Certifique-se que as colunas numéricas estão no formato correto
    - Verifique a codificação de arquivos CSV
+
+4. **Filtros**
+   - **Data**: Selecione uma coluna de data e defina um intervalo.
+   - **Valor numérico**: Filtre por valores mínimos e máximos.
+   - **Texto**: Filtre por palavras ou frases específicas.
+   - **Categorias**: Escolha categorias específicas para filtrar.
+
+5. **Agrupamento**
+   - Escolha uma coluna para agrupar os dados.
+   - Realize operações de soma ou contagem em outra coluna.
+
+6. **Exportação**
+   - Baixe os resultados processados em CSV, XLSX ou Parquet.
 
 ## 🤝 Contribuindo
 
