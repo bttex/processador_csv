@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  processador_csv:
+    build: .
+    container_name: processador_csv_app
+    ports:
+      - "8501:8501"
+    environment:
+      - TZ=America/Sao_Paulo
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./uploads:/app/uploads  # se o app salva arquivos de upload
+    command: streamlit run processador.py --server.port=8501 --server.address=0.0.0.0
+    restart: unless-stopped
